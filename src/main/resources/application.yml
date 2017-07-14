@@ -1,0 +1,30 @@
+spring:
+  data:
+    mongodb:
+      database: mydb
+      host: localhost
+      port: 27017
+      
+---
+spring:
+   profiles.active: prod
+---
+spring:
+   profiles: prod
+   datasource:
+      continueOnError: true
+      url: jdbc:mysql://10.6.184.183:3306/zicos_test?useSSL=false
+      username: root
+      password: root
+      testWhileIdle: true
+      validationQuery: SELECT 1
+
+   jpa:
+     show-sql: true
+     hibernate:
+       ddl-auto: update
+       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+     properties:  
+       hibernate:
+         id.new_generator_mappings: true 
+         dialect: org.hibernate.dialect.MySQL5Dialect      
