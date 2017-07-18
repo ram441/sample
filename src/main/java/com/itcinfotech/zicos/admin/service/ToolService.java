@@ -10,4 +10,5 @@ public interface ToolService {
 	public  List<Tools> findAllTools();	
 	public Tools saveTool(Tools toolPojo);
 	public Tools updateTool(Tools tool);
+	List<Tools> getToolsByProject(Long projectId);
 }

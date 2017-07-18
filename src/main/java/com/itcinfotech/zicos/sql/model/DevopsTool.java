@@ -38,7 +38,7 @@ public class DevopsTool implements Serializable{
 		this.devopsToolId = devopsToolId;
 	}
 //	@LazyCollection(LazyCollectionOption.FALSE)
-	@JsonIgnore
+	//@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "project_id")
 	public Projects getProject() {
@@ -48,7 +48,7 @@ public class DevopsTool implements Serializable{
 		this.project = project;
 	}
 //	@LazyCollection(LazyCollectionOption.FALSE)
-	@JsonIgnore
+	//@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "tool_id")
 	public Tools getTool() {
@@ -58,7 +58,7 @@ public class DevopsTool implements Serializable{
 		this.tool = tool;
 	}
 	
-	@JsonIgnore
+	//@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "devop_tool_id")
 	public DevopTool getDevopTool() {

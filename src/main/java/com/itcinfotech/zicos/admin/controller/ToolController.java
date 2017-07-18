@@ -1,15 +1,19 @@
 package com.itcinfotech.zicos.admin.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itcinfotech.zicos.admin.service.ToolService;
+import com.itcinfotech.zicos.sql.model.DevopsTool;
 import com.itcinfotech.zicos.sql.model.Tools;
 
 @RestController
@@ -24,6 +28,11 @@ public class ToolController {
 	@RequestMapping(value="/tool/{toolName}", method =RequestMethod.GET)
 	public  Tools getToolByName(@PathVariable("toolName") String toolName) {
 		return toolService.getToolByName(toolName);
+	}
+	
+	@RequestMapping(value="/tool",params={"projectId"}, method =RequestMethod.GET)
+	public List<Tools> getToolsByProject(@RequestParam("projectId") Long projectId) {
+		return toolService.getToolsByProject(projectId);
 	}
 	@RequestMapping(value="/tool", method =RequestMethod.GET)
 	public  List<Tools> findAllTools() {

@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Table
 @Entity(name ="devop_tool")
@@ -27,7 +28,7 @@ public class DevopTool implements Serializable{
 	private String modifiedBy;
 	private Date creadtedDate;
 	private Date modifiedDate;
-	
+	private String toolName;
 	private String accessKey;
 	private String secureKey;
 	
@@ -133,6 +134,13 @@ public class DevopTool implements Serializable{
 	 */
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	@Transient
+	public String getToolName() {
+		return toolName;
+	}
+	public void setToolName(String toolName) {
+		this.toolName = toolName;
 	}
 	
 

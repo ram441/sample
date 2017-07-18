@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itcinfotech.zicos.admin.service.DevopToolService;
 import com.itcinfotech.zicos.admin.service.DevopsToolMapService;
+import com.itcinfotech.zicos.sql.model.DevopTool;
 import com.itcinfotech.zicos.sql.model.DevopsTool;
 
 @RestController
@@ -18,6 +20,8 @@ public class DevopsToolController {
 	
 	@Autowired
 	private DevopsToolMapService devopsToolMapService;
+	@Autowired
+	private DevopToolService devopToolService;
 	
 	@RequestMapping(value="/devopstool/{id}", method =RequestMethod.GET)
 	public  DevopsTool findDevopsToolById(@PathVariable("id") Long id)  {
@@ -45,5 +49,19 @@ public class DevopsToolController {
 	public DevopsTool saveDevopsToolDts(Long projectId, Long toolId,
 			Long devopToolId) {
 		return null;
+	}
+	
+	@RequestMapping(value="/devoptool/{id}", method =RequestMethod.GET)
+	public DevopTool getDevopTools(@PathVariable("id") Long id) {
+		return devopToolService.findDevopToolById(id);
+	}
+	
+	@RequestMapping(value="/devoptool", method =RequestMethod.GET)
+	public List<DevopTool> getAllDevopTools() {
+		return devopToolService.findAllDevopTools();
+	}
+	@RequestMapping(value="/connection/validation", method =RequestMethod.POST)
+	public boolean validateConnectionConfig(@RequestBody DevopTool devopTool) {
+		return devopToolService.validateConnectionConfig(devopTool);
 	}
 }

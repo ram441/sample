@@ -13,4 +13,6 @@ public interface ProjectsRepository extends JpaRepository<Projects, Long> {
 
 	List<Projects> findByOrganisationBuConfig(OrganisationBuConfig buConfig);
 
+	List<Projects> findByActiveFlag(boolean b);
+
 }

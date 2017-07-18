@@ -52,6 +52,29 @@ public class Tools implements Serializable{
 	public void setToolDesc(String toolDesc) {
 		this.toolDesc = toolDesc;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((toolId == null) ? 0 : toolId.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tools other = (Tools) obj;
+		if (toolId == null) {
+			if (other.toolId != null)
+				return false;
+		} else if (!toolId.equals(other.toolId))
+			return false;
+		return true;
+	}
 	
 	/*@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "devopsTool")

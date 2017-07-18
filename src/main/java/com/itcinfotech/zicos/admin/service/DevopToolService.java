@@ -11,5 +11,5 @@ public interface DevopToolService {
 	public DevopTool saveDevopTool(DevopTool devopTool);
 	public Long saveDevopToolDts(DevopTool devopToolPojo);
 	public DevopTool updateDevopTool(DevopTool devopTool);
-	public boolean testExistingEnv(DevopTool formDevopToolPojo, String proxyIpAddress, Integer proxyPort);
+	public boolean validateConnectionConfig(DevopTool devopTool);
 }

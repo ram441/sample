@@ -116,8 +116,8 @@ public class Organisation implements Serializable{
 	
 	//@OneToMany(fetch = FetchType.LAZY, mappedBy = "organisation",cascade = CascadeType.PERSIST)
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "org_id")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST,mappedBy="organisation")
+	//@JoinColumn(name = "org_id")
 	public Set<OrganisationBuConfig> getOrganisationBuConfigs() {
 		return organisationBuConfigs;
 	}

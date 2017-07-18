@@ -42,6 +42,7 @@ public class Projects  implements Serializable{
 	private Date creadtedDate;
 	private Date modifiedDate;
 	private String projectDesc;
+	private boolean activeFlag;
 //	private 
 	
 	/*private Set<UserProjectConfig> userProjectConfigs = new HashSet<UserProjectConfig>(0);
@@ -164,6 +165,13 @@ public class Projects  implements Serializable{
 	 */
 	public void setProjectDesc(String projectDesc) {
 		this.projectDesc = projectDesc;
+	}
+	@Column(name="is_active_flag")
+	public boolean isActiveFlag() {
+		return activeFlag;
+	}
+	public void setActiveFlag(boolean activeFlag) {
+		this.activeFlag = activeFlag;
 	}
 
 	

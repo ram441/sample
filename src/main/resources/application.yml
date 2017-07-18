@@ -28,3 +28,20 @@ spring:
        hibernate:
          id.new_generator_mappings: true 
          dialect: org.hibernate.dialect.MySQL5Dialect      
+---
+proxy:
+  ip_address: 10.6.13.87
+  port: 8080
+---
+taas:
+  mail:
+    from: zicosadm@gmail.com
+    password: zicosadm@123
+---   
+linux:
+  hostname: 54.173.54.193
+  username: singh19269
+  password: new_password
+  port: 25003
+  shellScriptCmd: sudo ssh -i ZlabsCDH.pem ec2-user@172.31.38.185 "sh /home/ec2-user/quickstart.sh" 
+  fetchTextDtlsCmd: sudo ssh -i ZlabsCDH.pem ec2-user@172.31.38.185 "cat /home/ec2-user/credential.txt" 

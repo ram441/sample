@@ -33,7 +33,7 @@ public class ProjectServiceImpl implements ProjectService{
 	@Override
 	public List<Projects> findAllProjects() {
 		// TODO Auto-generated method stub
-		return projectsRepository.findAll();
+		return projectsRepository.findByActiveFlag(true);
 	}
 
 	@Override
@@ -56,8 +56,7 @@ public class ProjectServiceImpl implements ProjectService{
 
 	@Override
 	public List<Projects> fetchAllProjects() {
-		// TODO Auto-generated method stub
-		return null;
+		return projectsRepository.findByActiveFlag(true);
 	}
 	
 	
