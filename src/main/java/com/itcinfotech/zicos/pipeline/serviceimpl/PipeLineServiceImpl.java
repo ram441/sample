@@ -92,7 +92,7 @@ public class PipeLineServiceImpl implements PipeLineService {
 		pipeLineDef.setPipelineDefId(pipeDefId);
 		Environment environment = new Environment();
 		environment.setEnvId(envId);
-		return jobsPipelineRepository.findByProjectAndPipelineDefAndEnv(project, pipeLineDef,envId);
+		return jobsPipelineRepository.findByProjectAndPipelineDefAndEnv(project, pipeLineDef,environment);
 	}
 
 	@Override

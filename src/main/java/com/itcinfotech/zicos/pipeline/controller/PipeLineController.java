@@ -47,7 +47,9 @@ public class PipeLineController {
 	}
 	
 	@RequestMapping(value="/jobspipeline", params= {"projectId","pipeDefId","envId"}, method=RequestMethod.GET)
-	public List<JobsPipeline> getAllJobsPipeLineByProjectIdAndpieDefId(@RequestParam("projectId") Long projectId, @RequestParam("pipeDefId") Long pipeDefId, @RequestParam("envId") Long envId) {
+	public List<JobsPipeline> getAllJobsPipeLineByProjectIdAndpieDefId(@RequestParam("projectId") long projectId, @RequestParam("pipeDefId") long pipeDefId, @RequestParam("envId") long envId) {
+		System.out.println("=======================================");
+		
 		return pipeLineService.getAllJobsPipeLineByProjectIdAndpieDefId(projectId, pipeDefId,envId);
 	}
 	@RequestMapping(value="/pipelinetransactions", params= {"pipeDefId"}, method=RequestMethod.GET)
@@ -61,7 +63,7 @@ public class PipeLineController {
 	}
 	
 	@RequestMapping(value="/executepipeline ", params = {"projectId","pipelineDefId","envId"}, method=RequestMethod.GET)
-	public void runPipeLine(@RequestParam("projectid") Long projectId,@RequestParam("pipelineDefId") Long pipelineDefId, @RequestParam("envId") Long envId){
+	public void runPipeLine(@RequestParam("projectid") long projectId,@RequestParam("pipelineDefId") long pipelineDefId, @RequestParam("envId") long envId){
 		
 		pipeLineService.runPipeLine(projectId,pipelineDefId,envId);
 	}

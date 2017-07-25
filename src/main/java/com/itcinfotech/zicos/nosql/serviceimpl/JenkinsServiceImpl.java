@@ -59,25 +59,25 @@ public class JenkinsServiceImpl implements JenkinsService{
 	@Override
 	public Integer getTotalBuildCount(String jobName) {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.getTotalBuildCount(jobName);
 	}
 
 	@Override
 	public Integer getSuccessBuildCount(String jobName) {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.getSuccessBuildCount(jobName);
 	}
 
 	@Override
 	public Integer getFailedBuildCount(String jobName) {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.getFailedBuildCount(jobName);
 	}
 
 	@Override
 	public Integer getAbortedBuildCount(String jobName) {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.getAbortedBuildCount(jobName);
 	}
 
 	@Override
@@ -106,14 +106,14 @@ public class JenkinsServiceImpl implements JenkinsService{
 
 	@Override
 	public List<Jenkin> getLastBuildStatus(String jobName) {
-		// TODO Auto-generated method stub
-		return null;
+
+		List<Jenkin> jenkinsMongoData= jenkinRepository.findByJob(jobName);
+		return jenkinsMongoData;
 	}
 
 	@Override
 	public List<Jenkin> getIndividualBuildDetails(String jobName) {
-		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.findByJob(jobName);
 	}
 	
 	
