@@ -18,8 +18,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import sun.misc.BASE64Encoder;
+
 
 import com.itcinfotech.zicos.sql.model.DevopTool;
 import com.itcinfotech.zicos.sql.model.Tools;
@@ -31,9 +34,31 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-
+@Component
 public class CICDUtils {
 	static final Logger logger = LogManager.getLogger(CICDUtils.class.getName());
+	
+	@Value("${proxy.enable}")
+	private boolean proxyEnable;
+	
+	@Value("${linux.hostname}")
+	public String linuxHostName;
+	
+	@Value("${linux.username}")
+	public String linuxUserName;
+	
+	@Value("${linux.password}")
+	public String linuxPassword;
+	
+	@Value("${linux.port}")
+	public Integer linuxPort; 
+	
+	
+	@Value("${linux.shellScriptCmd}")
+	public String shellScriptCmd; 
+	
+	@Value("${linux.fetchTextDtlsCmd}")
+	public String fetchTextDtlsCmd; 
 	
 	/**
 	 * @param host
@@ -48,7 +73,7 @@ public class CICDUtils {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static boolean getTestConnResponse(String urlPath,String proxyIP,Integer proxyPort,String userName,String pwd, boolean flag,String toolName){
+	public boolean getTestConnResponse(String urlPath,String proxyIP,Integer proxyPort,String userName,String pwd, boolean flag,String toolName){
 		boolean connFlag =false;
 		URL url = null;
 		HttpURLConnection conn = null;
@@ -56,12 +81,16 @@ public class CICDUtils {
 		String line = null;
 		if(toolName!= null && StringUtils.isNotEmpty(toolName)){
 			
-			if(toolName.equalsIgnoreCase(Constants.JIRA_TOOL) || toolName.equalsIgnoreCase(Constants.BITBUCKET_TOOL)){
+			if(toolName.equalsIgnoreCase(Constants.JIRA_TOOL) || toolName.equalsIgnoreCase(Constants.BITBUCKET_TOOL) || toolName.equalsIgnoreCase(Constants.CHEF_TOOL)){
 				
 				try {
 					url = new URL(urlPath);
-					Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyIP, proxyPort));
-					conn = (HttpURLConnection) url.openConnection(proxy);
+					if(proxyEnable) {
+						Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyIP, proxyPort));
+						conn = (HttpURLConnection) url.openConnection(proxy);
+					}else {
+						conn = (HttpURLConnection) url.openConnection();
+					}
 					if(flag){
 						String userpass = userName + ":" +pwd;
 						String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
@@ -91,7 +120,7 @@ public class CICDUtils {
 					}
 				}
 				
-			}else if(toolName.equalsIgnoreCase(Constants.JENKINS_TOOL) || toolName.equalsIgnoreCase(Constants.SONAR_TOOL)){
+			}else if(toolName.equalsIgnoreCase(Constants.JENKINS_TOOL) || toolName.equalsIgnoreCase(Constants.SONAR_TOOL) || toolName.equalsIgnoreCase(Constants.NEXUS_TOOL)){
 				 	String authString = userName + ":" + pwd;
 			        String authStringEnc = new BASE64Encoder().encode(authString.getBytes());
 			        logger.info("Base64 encoded auth string: " + authStringEnc);
@@ -130,8 +159,10 @@ public class CICDUtils {
 	 * @param str_FileName
 	 * @return
 	 */
-	public static List<DevopTool> fetchToolConfigDtsByShellScriptCall(List<Tools> formTools,String linuxHostName,String linuxUserName,String linuxPwd,Integer linuxPort,String shellScriptCmd,String fetchTextDtlsCmd)  {
-		 List<DevopTool> ltDevToolPojo = new ArrayList<DevopTool>(); 
+	public boolean fetchToolConfigDtsByShellScriptCall(Long projectId,List<Tools> formTools)  {
+		System.out.println(linuxHostName+"-linuxUserName-"+linuxUserName+" -linuxPassword- "+linuxPassword+"-linuxPort--"+linuxPort+"-shellScriptCmd-"+shellScriptCmd+"-fetchTextDtlsCmd-"+fetchTextDtlsCmd);
+		
+		 boolean flag =false;
 		  JSch jsch = new JSch();
 	      Session session = null;
 	      String toolName = new String();
@@ -143,14 +174,15 @@ public class CICDUtils {
 		  		}
 	  		}
 	  	  logger.info(toolName);
-	  	  shellScriptCmd=shellScriptCmd.trim()+toolName;
+	  	 // shellScriptCmd=shellScriptCmd.trim()+" "+projectId+toolName;
+	  	 shellScriptCmd=shellScriptCmd.trim()+toolName;
 	      logger.info("Trying to connect..and execute...shellScriptCmd:"+shellScriptCmd);
 	      try{
 		    	
 		    	java.util.Properties config = new java.util.Properties(); 
 		    	config.put("StrictHostKeyChecking", "no");
 		    	session=jsch.getSession(linuxUserName, linuxHostName,linuxPort);
-		    	session.setPassword(linuxPwd);
+		    	session.setPassword(linuxPassword);
 		    	session.setConfig(config);
 		    	session.connect();
 		    	logger.info("Connected");
@@ -159,104 +191,16 @@ public class CICDUtils {
 		        channel.setInputStream(null);
 		        ((ChannelExec)channel).setErrStream(System.err);
 		        channel.connect();
-		        
-		        while (channel.getExitStatus() == -1){
-		            try{Thread.sleep(1000);}catch(Exception e){logger.error(e);break;}
-		         }
 		        channel.disconnect();
-
-		        Channel channel1=session.openChannel("exec");
-			       ((ChannelExec)channel1).setCommand(fetchTextDtlsCmd);
-			        channel1.setInputStream(null);
-			        ((ChannelExec)channel1).setErrStream(System.err);
-		        
-		        InputStream in=channel1.getInputStream();
-		        channel1.connect();
-		        byte[] tmp=new byte[1024];
-		        
-		        while(true){
-		          while(in.available()>0){
-		            int i=in.read(tmp, 0, 1024);
-		            if(i<0){
-		            	logger.info("Data is not there");
-		            	break;
-		            	
-		            }else{
-		            	logger.info("Data is there");
-		            	System.out.print(new String(tmp, 0, i));
-		           
-		            Scanner scanner = new Scanner(new String(tmp, 0, i));
-		            while (scanner.hasNextLine()) {
-		              String line = scanner.nextLine();
-		              logger.info("--"+line);
-		              System.out.println(line+"==============================================");
-		              DevopTool devopToolPojo = new DevopTool();
-		              StringTokenizer st = new StringTokenizer(line,Constants.PIPE_SYMBOL);
-			             while(st.hasMoreTokens()){
-			            	 String string =st.nextToken();
-			                 String[] parts = string.split(Constants.HASH_SYMBOL);
-			                 String part2="";
-			                 String part1 = parts[0].trim();
-			                 if(parts.length>1 && null!=parts[1] && parts[1]!=""){
-			                	 part2 = parts[1].trim();
-			                 }
-			                 if(part1!=null && part1.equalsIgnoreCase(Constants.TOOL_NAME)){
-			                	 if(part2!=null && StringUtils.isNotEmpty(part2)){
-			                		 devopToolPojo.setToolName(part2);
-			                	 }
-			                 }else if(part1!=null && part1.equalsIgnoreCase(Constants.URL)){
-			                	 if(part2!=null && StringUtils.isNotEmpty(part2)){
-			                		 devopToolPojo.setUrl(part2);
-			                	 }
-			                 }else if(part1!=null && part1.equalsIgnoreCase(Constants.USERNAME)){
-			                	 if(part2!=null && StringUtils.isNotEmpty(part2)){
-			                		 devopToolPojo.setUserName(part2);
-			                	 }
-			                 }else if(part1!=null && part1.equalsIgnoreCase(Constants.PASSWORD)){
-			                	 if(part2!=null && StringUtils.isNotEmpty(part2)){
-			                		 devopToolPojo.setPassword(part2);
-			                	 }
-			                 }else if(part1!=null && part1.equalsIgnoreCase(Constants.ACCESSKEY)){
-			                	 if(part2!=null && StringUtils.isNotEmpty(part2)){
-			                		 devopToolPojo.setAccessKey(part2);
-			                	 }
-			                 }else if(part1!=null && part1.equalsIgnoreCase(Constants.SECUREKEY)){
-			                	 if(part2!=null && StringUtils.isNotEmpty(part2)){
-			                		 devopToolPojo.setSecureKey(part2);
-			                	 }
-			                 }else{
-			                	// logger.error("Fields are not Matching in the File");
-			                 }
-			                 
-			             }
-			             if(devopToolPojo!=null && devopToolPojo.getUrl()!=null){
-			            	 	ltDevToolPojo.add(devopToolPojo);
-				             }
-		            }
-		            scanner.close();
-		            }  
-		            logger.info("SIZE:"+ltDevToolPojo.size());
-		          }
-		          if(channel1.isClosed()){
-		            System.out.println("exit-status: "+channel1.getExitStatus());
-		            if(channel1.getExitStatus()==0){
-		            	 System.out.println("exit-status: "+channel1.getExitStatus());
-		            }
-		            break;
-		         }
-		         }
-		        channel1.disconnect();
 		        session.disconnect();
+		        flag=true;
 		        logger.info("END");
 		    }catch(Exception e){
 		    	e.printStackTrace();
+		    	flag=false;
 		    }
-	      if(ltDevToolPojo!= null && ltDevToolPojo.size()>0){
-		      for(DevopTool fb:ltDevToolPojo){
-		    	  System.out.println("toolName:"+fb.getToolName()+"url:"+fb.getUrl()+"userName:"+fb.getUserName()+"pwd:"+fb.getPassword()+"acc:"+fb.getAccessKey()+"sec:"+fb.getSecureKey());
-		      }
-	      }
-	      return  ltDevToolPojo;
+	      return  flag;//ltDevToolPojo;
 	  }
 	
-}
+	
+	}

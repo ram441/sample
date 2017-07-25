@@ -1,4 +1,4 @@
-package com.itcinfotech.zicos.sql.repository;
+/*package com.itcinfotech.zicos.sql.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,3 +10,4 @@ public interface BuildRepository extends JpaRepository<Build, Long> {
 	Build findByJob(Jobs job);
 
 }
+*/

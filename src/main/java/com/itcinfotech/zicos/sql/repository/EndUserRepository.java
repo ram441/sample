@@ -10,4 +10,6 @@ public interface EndUserRepository extends JpaRepository<EndUser, Long> {
 
 	EndUser findByEmail(String username);
 
+	EndUser findByEmailAndDisabled(String username, boolean b);
+
 }

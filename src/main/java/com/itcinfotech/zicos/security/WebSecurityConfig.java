@@ -42,8 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private EndUserRepository endUserRepository;
 
 	@Autowired
-	private GuestUserRepository guestUserRepository;
-	@Autowired
 	private RoleRepository roleRepository;
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -137,7 +135,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.email("super_user@demo.com").firstName("admin")
 					.lastName("lastName").contactNumber("1234567890")
 					.creadtedBy("super_user@demo.com").creadtedDate(new Date())
-					.status(true).contactMobile("1234567890").role(role)
+					.status(false).contactMobile("1234567890").role(role)
 					.build();
 
 			user = endUserRepository.save(user);

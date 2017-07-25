@@ -2,6 +2,7 @@ package com.itcinfotech.zicos.sql.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,8 +38,6 @@ public class DevopsTool implements Serializable{
 	public void setDevopsToolId(Long devopsToolId) {
 		this.devopsToolId = devopsToolId;
 	}
-//	@LazyCollection(LazyCollectionOption.FALSE)
-	//@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "project_id")
 	public Projects getProject() {
@@ -47,9 +46,7 @@ public class DevopsTool implements Serializable{
 	public void setProject(Projects project) {
 		this.project = project;
 	}
-//	@LazyCollection(LazyCollectionOption.FALSE)
-	//@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
 	@JoinColumn(name = "tool_id")
 	public Tools getTool() {
 		return tool;
@@ -58,8 +55,7 @@ public class DevopsTool implements Serializable{
 		this.tool = tool;
 	}
 	
-	//@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "devop_tool_id")
 	public DevopTool getDevopTool() {
 		return devopTool;

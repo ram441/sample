@@ -1,8 +1,13 @@
 package com.itcinfotech.zicos.admin.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itcinfotech.zicos.admin.service.DevopToolService;
 import com.itcinfotech.zicos.admin.service.DevopsToolMapService;
+
 import com.itcinfotech.zicos.sql.model.DevopTool;
 import com.itcinfotech.zicos.sql.model.DevopsTool;
+import com.itcinfotech.zicos.utils.Constants;
 
 @RestController
 public class DevopsToolController {
@@ -64,4 +71,14 @@ public class DevopsToolController {
 	public boolean validateConnectionConfig(@RequestBody DevopTool devopTool) {
 		return devopToolService.validateConnectionConfig(devopTool);
 	}
+	
+	@RequestMapping(value="/toolsConfig", method =RequestMethod.POST)
+	public boolean saveToolsConfigForNewEnv(@RequestBody List<DevopsTool> devopsTools) {
+		return devopsToolMapService.saveToolsConfigForNewEnv(devopsTools);
+	}
+	
+	
+	
+	
+	
 }

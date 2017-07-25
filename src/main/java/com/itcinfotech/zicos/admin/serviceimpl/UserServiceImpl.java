@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itcinfotech.zicos.admin.service.UserService;
+import com.itcinfotech.zicos.exceptions.UserAlreadyExistException;
 import com.itcinfotech.zicos.sql.model.EndUser;
 import com.itcinfotech.zicos.sql.repository.EndUserRepository;
 
@@ -33,9 +34,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public EndUser saveUser(EndUser user) {
+	public EndUser saveUser(EndUser user) throws UserAlreadyExistException {
 		EndUser isExist = endUserRepository.findByEmail(user.getEmail());
-        //if(isExist!=null) 
+        if(isExist!=null) {
+        	throw new UserAlreadyExistException();
+        }
 		return endUserRepository.save(user);
 	}
 
@@ -49,6 +52,12 @@ public class UserServiceImpl implements UserService {
 	public EndUser findByEmail(String username) {
 		// TODO Auto-generated method stub
 		return endUserRepository.findByEmail(username);
+	}
+
+	@Override
+	public EndUser findByEmailAndIsDisabled(String username, boolean b) {
+		// TODO Auto-generated method stub
+		return endUserRepository.findByEmailAndDisabled(username,b);
 	}
 	
 	

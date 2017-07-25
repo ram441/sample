@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      database: mydb
+      database: zicos
       host: localhost
       port: 27017
       
@@ -27,7 +27,41 @@ spring:
      properties:  
        hibernate:
          id.new_generator_mappings: true 
-         dialect: org.hibernate.dialect.MySQL5Dialect      
+         dialect: org.hibernate.dialect.MySQL5Dialect  
+         
+---
+#Jenkin Server
+jenkin.url: http://ec2-54-173-54-193.compute-1.amazonaws.com:25001
+jenkin.host: 54.173.54.193
+jenkin.port: 25001
+jenkin.username: admin
+jenkin.password: admin
+#Proxy
+proxy.enable: true
+proxy.ip_address: 10.6.13.87
+proxy.port: 8080
+proxy.scheme: http
+target.scheme: http
+---
+server:
+  session:
+    timeout: 1800
+          
+---
+#Zicos forgot password
+zicos.forgot.pwd: /auth/forgotPwdReset  
+taas.mail.smtp.auth: mail.smtp.auth  
+taas.mail.from: zicosadm@gmail.com
+taas.mail.password: zicosadm@123
+
+taas.mail.smtp.server.host.props: mail.smtp.host
+taas.mail.host: 10.6.12.154
+zicos.admin.user.id: Subbarao.Challagundla@itcinfotech.com
+proxy.enable: true
+taas.mail.smtp.starttls.enable: mail.smtp.starttls.enable
+---
+user:
+  expiredate: 10            
 ---
 proxy:
   ip_address: 10.6.13.87

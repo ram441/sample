@@ -13,4 +13,5 @@ public interface DevopsToolMapService {
 	public List<DevopsTool> findDevopsToolByProjectId(Long id);
 	public DevopsTool saveDevopsToolDts(Long projectId, Long toolId,
 			Long devopToolId);
+	public boolean saveToolsConfigForNewEnv(List<DevopsTool> devopsTools);
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itcinfotech.zicos.admin.service.UserService;
+import com.itcinfotech.zicos.exceptions.UserAlreadyExistException;
 import com.itcinfotech.zicos.sql.model.EndUser;
 
 @RestController
@@ -31,7 +32,7 @@ public class UserController {
 		return userService.findAllUsers();
 	}
 	@RequestMapping(value="/user", method =RequestMethod.POST)
-	public EndUser saveUser(@RequestBody EndUser user) {
+	public EndUser saveUser(@RequestBody EndUser user) throws UserAlreadyExistException {
 		return userService.saveUser(user);
 	}
 	@RequestMapping(value="/user", method =RequestMethod.PUT)

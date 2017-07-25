@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itcinfotech.zicos.admin.service.BuildService;
 import com.itcinfotech.zicos.sql.model.Build;
 
-@RestController
+//@RestController
 public class BuildController {
 
 	@Autowired

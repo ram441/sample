@@ -41,6 +41,9 @@ public class Organisation implements Serializable{
 	
 	private String imagePath;
 	
+	@Column(name="is_disabled")
+	private boolean disabled;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name = "org_id", unique = true, nullable = false)
@@ -159,5 +162,12 @@ public class Organisation implements Serializable{
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
+	public boolean isDisabled() {
+		return disabled;
+	}
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+	
 	
 }

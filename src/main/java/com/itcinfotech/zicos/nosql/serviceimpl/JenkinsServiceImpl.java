@@ -2,18 +2,22 @@ package com.itcinfotech.zicos.nosql.serviceimpl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itcinfotech.zicos.nosql.model.Jenkin;
+import com.itcinfotech.zicos.nosql.repository.JenkinRepository;
 import com.itcinfotech.zicos.nosql.service.JenkinsService;
 
 @Service
 public class JenkinsServiceImpl implements JenkinsService{
 
+	@Autowired
+	private JenkinRepository jenkinRepository;
 	@Override
 	public Jenkin saveJenkinsData(Jenkin jenkin) {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.save(jenkin);
 	}
 
 	@Override
@@ -25,31 +29,31 @@ public class JenkinsServiceImpl implements JenkinsService{
 	@Override
 	public Jenkin getJenkinByBuildName(String buildName) {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.findByBuildName(buildName);
 	}
 
 	@Override
 	public Jenkin update(Jenkin jenkin) {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.save(jenkin);
 	}
 
 	@Override
 	public List<Jenkin> getJenkinAllCollectionData() {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.findAll();
 	}
 
 	@Override
 	public List<Jenkin> getJobNames() {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.findAll();
 	}
 
 	@Override
 	public List<Jenkin> getJobNamesByPorject(String projectName) {
 		// TODO Auto-generated method stub
-		return null;
+		return jenkinRepository.findByProjectName(projectName);
 	}
 
 	@Override

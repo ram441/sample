@@ -23,9 +23,9 @@ public class ProjectController {
 	public  Projects findProjectById(@PathVariable("id")Long id) {
 		return projectService.findProjectById(id);
 	}
-	@RequestMapping(value="/project/{projectName}", method =RequestMethod.GET)
-	public  Projects getProjectByName(@PathVariable("roleName") String roleName) {
-		return projectService.getProjectByName(roleName);
+	@RequestMapping(value="/project", params={"projectName"}, method =RequestMethod.GET)
+	public  Projects getProjectByName(@RequestParam("projectName") String projectName) {
+		return projectService.getProjectByName(projectName);
 	}
 	@RequestMapping(value="/project", method =RequestMethod.GET)
 	public  List<Projects> findAllProjects() {

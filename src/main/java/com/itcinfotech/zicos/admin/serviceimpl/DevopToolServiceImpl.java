@@ -23,6 +23,9 @@ public class DevopToolServiceImpl implements DevopToolService{
 	public Integer proxyPort;
 	
 	@Autowired
+	private CICDUtils cICDUtils;
+	
+	@Autowired
 	private DevopToolRepository devopToolRepository;
 	
 	@Override
@@ -71,10 +74,11 @@ public class DevopToolServiceImpl implements DevopToolService{
 	
 	public boolean testExistingEnv(DevopTool formDevopToolPojo) {
 		boolean flag=true;
+		boolean status =false;
 		DevopTool devopTool = new DevopTool();
 		if(formDevopToolPojo!=null && formDevopToolPojo.getToolName()!=null && StringUtils.isNotEmpty(formDevopToolPojo.getToolName())){
 			if(formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.JIRA_TOOL) || formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.SONAR_TOOL) || formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.BITBUCKET_TOOL)
-					|| formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.JENKINS_TOOL)){
+					|| formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.JENKINS_TOOL) || formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.CHEF_TOOL) || formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.NEXUS_TOOL)){
 				String urlPath="";
 				if(formDevopToolPojo.getUrl()!= null && StringUtils.isNotEmpty(formDevopToolPojo.getUrl())){
 					devopTool.setUrl(formDevopToolPojo.getUrl());
@@ -86,15 +90,19 @@ public class DevopToolServiceImpl implements DevopToolService{
 					devopTool.setPassword(formDevopToolPojo.getPassword());
 				}
 				if(formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.JIRA_TOOL)){
-					urlPath=Constants.PATH_JIRA_TOOL;
+					urlPath=Constants.JIRA_URLPATH;
 				}
-					return CICDUtils.getTestConnResponse(devopTool.getUrl()+urlPath, proxyIpAddress, proxyPort, devopTool.getUserName(), devopTool.getPassword(),true,formDevopToolPojo.getToolName());
-				}else if(formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.CHEF_TOOL)){
-					devopTool.setUrl(formDevopToolPojo.getUrl());
-				}else if(formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.NEXUS_TOOL)){
-					devopTool.setUrl(formDevopToolPojo.getUrl());
+				if(formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.JIRA_TOOL) || formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.BITBUCKET_TOOL) || formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.CHEF_TOOL)){
+					status = true;
+				}
+				if(formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.NEXUS_TOOL) || formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.SONAR_TOOL) || formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.JENKINS_TOOL)){
+					status = false;
+				}
+				
+					return cICDUtils.getTestConnResponse(devopTool.getUrl()+urlPath, proxyIpAddress, proxyPort, devopTool.getUserName(), devopTool.getPassword(),status,formDevopToolPojo.getToolName());
 				}else if(formDevopToolPojo.getToolName().equalsIgnoreCase(Constants.REDMINE_TOOL)){
 					devopTool.setUrl(formDevopToolPojo.getUrl());
+					flag=false;
 			}else{
 				flag=false;
 			}

@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "user")
@@ -38,15 +39,17 @@ public class EndUser implements java.io.Serializable {
 	private String password;
 	private String creadtedBy;
 	private String modifiedBy;
-	private Date creadtedDate;
+	private Date createdDate;
 	private Date modifiedDate;
 	private Role role;
 	private String imagePath;
 	private String designation;
-	private Boolean status;
+	//private Boolean status;
 	private String contactMobile;
 	
-	
+	private String orgName;
+	private Date expiryDate;
+	private boolean disabled;
 	private Set<UserProjectConfig> userProjectConfig;
 //	private 
 	
@@ -64,12 +67,12 @@ public class EndUser implements java.io.Serializable {
 		 this.password = userBuilder.password;
 		 this.creadtedBy = userBuilder.creadtedBy;
 		 this.modifiedBy = userBuilder.modifiedBy;
-		 this.creadtedDate = userBuilder.creadtedDate;
+		 this.createdDate = userBuilder.creadtedDate;
 		 this.modifiedDate = userBuilder.modifiedDate;
 		 this.role = userBuilder.role;
 		 this.imagePath = userBuilder.imagePath;
 		 this.designation = userBuilder.designation;
-		 this.status =  userBuilder.status;
+		 this.disabled =  userBuilder.disabled;
 		 this.contactMobile = userBuilder.contactMobile ;
 	}
 
@@ -80,8 +83,8 @@ public class EndUser implements java.io.Serializable {
 		return endUserId;
 	}
 	
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.PERSIST)
+	//@JsonIgnore
+	@OneToMany(fetch = FetchType.EAGER,cascade=CascadeType.PERSIST)
 	@JoinColumn(name="user_id")
 	public Set<UserProjectConfig> getUserProjectConfig() {
 		return userProjectConfig;
@@ -149,12 +152,12 @@ public class EndUser implements java.io.Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 	
-	@Column(name = "creadted_date")
-	public Date getCreadtedDate() {
-		return creadtedDate;
+	@Column(name = "created_date")
+	public Date getCreatedDate() {
+		return createdDate;
 	}
-	public void setCreadtedDate(Date creadtedDate) {
-		this.creadtedDate = creadtedDate;
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 	
 	@Column(name = "modified_date")
@@ -181,6 +184,7 @@ public class EndUser implements java.io.Serializable {
 	public String getPassword() {
 		return password;
 	}
+	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -217,12 +221,26 @@ public class EndUser implements java.io.Serializable {
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
-	@Column(name = "status")
-	public Boolean getStatus() {
-		return status;
+	@Column(name="org_name")
+	public String getOrgName() {
+		return orgName;
 	}
-	public void setStatus(Boolean status) {
-		this.status = status;
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	@Column(name="expiry_date")
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+	@Column(name="is_disable")
+	public boolean isDisabled() {
+		return disabled;
+	}
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 	@Column(name ="contact_mobile")
 	public String getContactMobile() {
@@ -262,7 +280,7 @@ public class EndUser implements java.io.Serializable {
 		private Role role;
 		private String imagePath;
 		private String designation;
-		private Boolean status;
+		private boolean disabled;
 		private String contactMobile;
 		
 		public UserBuilder displayName(String displayName) {
@@ -322,8 +340,8 @@ public class EndUser implements java.io.Serializable {
 			this.designation = designation;
 			return this;
 		}
-		public UserBuilder status(boolean status) {
-			this.status = status;
+		public UserBuilder status(boolean disabled) {
+			this.disabled = disabled;
 			return this;
 		}
 		public UserBuilder contactMobile(String contactMobile) {

@@ -2,10 +2,13 @@ package com.itcinfotech.zicos.nosql.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.itcinfotech.zicos.sql.model.Build;
 
 @Document(collection ="jenkin")
 public class Jenkin implements Serializable{
@@ -33,14 +36,16 @@ public class Jenkin implements Serializable{
 	public Integer failedBuildCount;
 	public Integer abortedBuildCount;
 	public Integer count;
-	public Integer failureRate;
+	public double failureRate;
 	public Map<String, Integer> map=null;
 	public String shortDescription;
-	public Integer lastBuildDuration;
-	public Integer lastSuccessBuildDuration;
-	public Integer lastUnSuccessBuildDuration;
+	public String lastBuildDuration;
+	public String lastSuccessBuildDuration;
+	public String lastUnSuccessBuildDuration;
+	public Integer duration;
+	public String projectName;
 	
-	
+	public List<Build> buildDetails;
 	public String getJenkinId() {
 		return jenkinId;
 	}
@@ -157,10 +162,10 @@ public class Jenkin implements Serializable{
 	public void setCount(Integer count) {
 		this.count = count;
 	}
-	public Integer getFailureRate() {
+	public double getFailureRate() {
 		return failureRate;
 	}
-	public void setFailureRate(Integer failureRate) {
+	public void setFailureRate(double failureRate) {
 		this.failureRate = failureRate;
 	}
 	public Map<String, Integer> getMap() {
@@ -175,23 +180,41 @@ public class Jenkin implements Serializable{
 	public void setShortDescription(String shortDescription) {
 		this.shortDescription = shortDescription;
 	}
-	public Integer getLastSuccessBuildDuration() {
+	public String getLastSuccessBuildDuration() {
 		return lastSuccessBuildDuration;
 	}
-	public void setLastSuccessBuildDuration(Integer lastSuccessBuildDuration) {
+	public void setLastSuccessBuildDuration(String lastSuccessBuildDuration) {
 		this.lastSuccessBuildDuration = lastSuccessBuildDuration;
 	}
-	public Integer getLastBuildDuration() {
+	public String getLastBuildDuration() {
 		return lastBuildDuration;
 	}
-	public void setLastBuildDuration(Integer lastBuildDuration) {
+	public void setLastBuildDuration(String lastBuildDuration) {
 		this.lastBuildDuration = lastBuildDuration;
 	}
-	public Integer getLastUnSuccessBuildDuration() {
+	public String getLastUnSuccessBuildDuration() {
 		return lastUnSuccessBuildDuration;
 	}
-	public void setLastUnSuccessBuildDuration(Integer lastUnSuccessBuildDuration) {
+	public void setLastUnSuccessBuildDuration(String lastUnSuccessBuildDuration) {
 		this.lastUnSuccessBuildDuration = lastUnSuccessBuildDuration;
+	}
+	public Integer getDuration() {
+		return duration;
+	}
+	public void setDuration(Integer integer) {
+		this.duration = integer;
+	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	public List<Build> getBuildDetails() {
+		return buildDetails;
+	}
+	public void setBuildDetails(List<Build> buildDetails) {
+		this.buildDetails = buildDetails;
 	}
 
 	

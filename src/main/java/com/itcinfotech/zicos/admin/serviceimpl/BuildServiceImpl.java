@@ -1,4 +1,4 @@
-package com.itcinfotech.zicos.admin.serviceimpl;
+/*package com.itcinfotech.zicos.admin.serviceimpl;
 
 import java.util.List;
 
@@ -50,3 +50,4 @@ public class BuildServiceImpl implements BuildService  {
 	
 	
 }
+*/

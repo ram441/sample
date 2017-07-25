@@ -1,8 +1,8 @@
-package com.itcinfotech.zicos.security;
+/*package com.itcinfotech.zicos.security;
 
-/**
+*//**
  * 
- */
+ *//*
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -16,10 +16,10 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 
 import redis.embedded.RedisServer;
 
-/**
+*//**
  * @author Vinod Kumar
  *
- */
+ *//*
 @Configuration
 @EnableRedisHttpSession
 public class EmbeddedRedisConfiguration {
@@ -30,7 +30,7 @@ public class EmbeddedRedisConfiguration {
     public static ConfigureRedisAction configureRedisAction() {
         return ConfigureRedisAction.NO_OP;
     }
-   /* @Bean
+    @Bean
     public JedisConnectionFactory connectionFactory() throws IOException, URISyntaxException {
     	redisServer = new RedisServer(Protocol.DEFAULT_PORT);
     	try{	
@@ -42,7 +42,7 @@ public class EmbeddedRedisConfiguration {
     	}
     	connectionFactory=new JedisConnectionFactory();
     	return connectionFactory;
-    }*/
+    }
     
     @Bean
     public JedisConnectionFactory connectionFactory() {
@@ -52,8 +52,9 @@ public class EmbeddedRedisConfiguration {
     }
     @PreDestroy
     public void destroy() throws Exception {
-      /* redisServer.stop();
-       redisServer.start();*/
+       redisServer.stop();
+       redisServer.start();
     }
 
 }
+*/
