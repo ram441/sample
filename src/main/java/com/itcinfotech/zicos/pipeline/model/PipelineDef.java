@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.itcinfotech.zicos.sql.model.Projects;
 
 @Entity
 @Table(name = "pipeline_def")
@@ -29,7 +30,7 @@ public class PipelineDef  implements Serializable{
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "project_id")
-	private ViewProjects projects;
+	private Projects projects;
 	
 	@Column(name = "pipe_exec_id")
 	private Long pipeExecId;
@@ -57,10 +58,10 @@ public class PipelineDef  implements Serializable{
 	}
 	
 	
-	public ViewProjects getProjects() {
+	public Projects getProjects() {
 		return projects;
 	}
-	public void setProjects(ViewProjects projects) {
+	public void setProjects(Projects projects) {
 		this.projects = projects;
 	}
 	

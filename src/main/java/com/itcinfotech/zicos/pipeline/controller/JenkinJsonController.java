@@ -27,15 +27,14 @@ import org.xml.sax.SAXException;
 
 import com.itcinfotech.zicos.admin.service.EnvironmentService;
 import com.itcinfotech.zicos.admin.service.JobsService;
+import com.itcinfotech.zicos.admin.service.ProjectService;
 import com.itcinfotech.zicos.nosql.model.Jenkin;
 import com.itcinfotech.zicos.nosql.service.JenkinsService;
 import com.itcinfotech.zicos.pipeline.model.Environment;
 import com.itcinfotech.zicos.pipeline.model.JobsPipeline;
 import com.itcinfotech.zicos.pipeline.model.PipelineDef;
-import com.itcinfotech.zicos.pipeline.model.ViewProjects;
 import com.itcinfotech.zicos.pipeline.service.PipeLineService;
 import com.itcinfotech.zicos.pipeline.service.PipelineDefService;
-import com.itcinfotech.zicos.pipeline.service.ViewProjectsService;
 import com.itcinfotech.zicos.sql.model.Build;
 import com.itcinfotech.zicos.sql.model.Jobs;
 import com.itcinfotech.zicos.sql.model.Projects;
@@ -55,7 +54,7 @@ public class JenkinJsonController {
 	@Autowired
 	private EnvironmentService envService;
 	@Autowired
-	private ViewProjectsService viewProjectService;
+	private ProjectService projectService;
 	@Autowired
 	PipelineDefService pipelineDefService;
 	@Autowired
@@ -215,13 +214,13 @@ public class JenkinJsonController {
 	 */
 	public void saveViewJobsByProject(Set<String> jobsAssociatedWithProj,Long projectId,Long envId){
 		JobsPipeline job = null;
-		ViewProjects project = null;
+		Projects project = null;
 		Environment environment = null;
 		if(jobsAssociatedWithProj != null){
 			for(String jobs: jobsAssociatedWithProj){
 					job = new JobsPipeline();
-					project = new ViewProjects();
-					project.setViewProjId(projectId);
+					project = new Projects();
+					project.setProjectId(projectId);
 					job.setProject(project);
 					environment = new Environment();
 					environment.setEnvId(envId);
@@ -285,7 +284,6 @@ public class JenkinJsonController {
 	@RequestMapping(value = "/fetchjoblistforpipeline/{projectId}/{envId}", method = RequestMethod.GET)
 	public  List<JobsPipeline> fetchJobLIstForPipeline(@PathVariable("projectId") Long projectId,@PathVariable("envId") Long envId) throws ParseException{
 		Set<String> jobNames = null;
-		HttpHeaders headers = new HttpHeaders();
 		List<JobsPipeline> jobsPipelineLst = null;
 		
 		jobsPipelineLst = jobsPipelineService.findJobsByProjId(projectId);
@@ -294,10 +292,10 @@ public class JenkinJsonController {
 				return jobsPipelineLst;
 		}
 		//jobNames are coming from jenkins server direct call
-		ViewProjects viewProjNames = viewProjectService.findProjectById(projectId);
-		jobNames = getJobsByViewProject(viewProjNames.getProjName());
+		Projects viewProjNames = projectService.findProjectById(projectId);
+		jobNames = getJobsByViewProject(viewProjNames.getProjectName());
 		logger.info("set of jobNames "+jobNames+ "job names size : "+jobNames.size());
-		saveViewJobsByProject(jobNames,viewProjNames.getViewProjId(),envId);
+		saveViewJobsByProject(jobNames,viewProjNames.getProjectId(),envId);
 		jobsPipelineLst = jobsPipelineService.findJobsByProjId(projectId);
 		if(jobsPipelineLst == null){
 			logger.info("no jobs found");
@@ -317,11 +315,11 @@ public class JenkinJsonController {
 		Build buildDetails = null;
 		List<Jenkin> jenkinForms = new ArrayList<Jenkin>();
 		List<JobsPipeline> jobNames = jobsPipelineService.findJobsByProjId(projectId);
-		ViewProjects viewProjNames = viewProjectService.findProjectById(projectId);
+		Projects viewProjNames = projectService.findProjectById(projectId);
 		logger.info("View Project names : "+viewProjNames);
 		for(JobsPipeline jobName : jobNames) {
 			jenkinForm = new Jenkin();
-			jenkinForm.setProjectName(viewProjNames.getProjName());
+			jenkinForm.setProjectName(viewProjNames.getProjectName());
 			jenkinForm.setJob(jobName.getJobName());
 			List<Build> buildList = new ArrayList<Build>();
 			List<Jenkin> individualBuildstatus=	jenkinsService.getIndividualBuildDetails(jobName.getJobName());

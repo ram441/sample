@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.itcinfotech.zicos.pipeline.model.Environment;
 import com.itcinfotech.zicos.pipeline.model.PipelineDef;
-import com.itcinfotech.zicos.pipeline.model.ViewProjects;
 import com.itcinfotech.zicos.pipeline.repository.EnvironmentRepository;
 import com.itcinfotech.zicos.pipeline.repository.PipelineDefRepository;
-import com.itcinfotech.zicos.pipeline.repository.ViewProjectsRepository;
 import com.itcinfotech.zicos.pipeline.service.PipelineDefService;
+import com.itcinfotech.zicos.sql.model.Projects;
+import com.itcinfotech.zicos.sql.repository.ProjectsRepository;
 
 @Service
 public class PipelineDefServiceImpl implements PipelineDefService {
@@ -19,7 +19,7 @@ public class PipelineDefServiceImpl implements PipelineDefService {
 	@Autowired
 	private PipelineDefRepository pipelineDefRepository;
 	@Autowired
-	private ViewProjectsRepository viewProjectRepository;
+	private ProjectsRepository projectRepository;
 	@Autowired
 	private EnvironmentRepository environmentRepository;
 	@Override
@@ -31,13 +31,13 @@ public class PipelineDefServiceImpl implements PipelineDefService {
 	@Override
 	public PipelineDef findPipelineDefByProjectName(String projName) {
 		// TODO Auto-generated method stub
-		ViewProjects project = viewProjectRepository.findByProjName(projName);
+		Projects project = projectRepository.findByProjectName(projName);
 		return pipelineDefRepository.findByProjects(project);
 	}
 
 	@Override
 	public List<PipelineDef> loadAllPipelineDef(Long projId, Long envId) {
-		ViewProjects project = viewProjectRepository.getOne(projId);
+		Projects project = projectRepository.getOne(projId);
 		Environment environment = environmentRepository.getOne(envId);
 		return pipelineDefRepository.findByProjectsAndEnvironment(project,environment);
 	}

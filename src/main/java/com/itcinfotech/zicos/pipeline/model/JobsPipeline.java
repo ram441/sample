@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.itcinfotech.zicos.sql.model.Projects;
+
 
 @Entity
 @Table(name = "jobs_pipeline")
@@ -25,9 +27,9 @@ public class JobsPipeline implements java.io.Serializable {
 	@Column(name = "job_name")
 	private String jobName;
 	
-	@ManyToOne(fetch = FetchType.EAGER,cascade=CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.EAGER,cascade=CascadeType.MERGE)
 	@JoinColumn(name = "project_id")
-	private ViewProjects project;
+	private Projects project;
 	
 	@Column(name = "is_assigned")
 	private String isAssigned;
@@ -63,10 +65,10 @@ public class JobsPipeline implements java.io.Serializable {
 	}
 
 	
-	public ViewProjects getProject() {
+	public Projects getProject() {
 		return project;
 	}
-	public void setProject(ViewProjects project) {
+	public void setProject(Projects project) {
 		this.project = project;
 	}
 

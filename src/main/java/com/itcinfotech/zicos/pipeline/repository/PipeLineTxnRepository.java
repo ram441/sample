@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import com.itcinfotech.zicos.pipeline.model.JobsPipeline;
 import com.itcinfotech.zicos.pipeline.model.PipeLineTxn;
 import com.itcinfotech.zicos.pipeline.model.PipelineDef;
-import com.itcinfotech.zicos.pipeline.model.ViewProjects;
 
 public interface PipeLineTxnRepository extends JpaRepository<PipeLineTxn, Long> {
 

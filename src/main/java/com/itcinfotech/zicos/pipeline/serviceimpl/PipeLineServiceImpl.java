@@ -16,20 +16,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
-import com.itcinfotech.zicos.pipeline.controller.PipeLineController;
+import com.itcinfotech.zicos.admin.service.ProjectService;
 import com.itcinfotech.zicos.pipeline.model.Environment;
 import com.itcinfotech.zicos.pipeline.model.JobsPipeline;
 import com.itcinfotech.zicos.pipeline.model.PipeLineTxn;
 import com.itcinfotech.zicos.pipeline.model.PipelineDef;
-import com.itcinfotech.zicos.pipeline.model.ViewProjects;
 import com.itcinfotech.zicos.pipeline.repository.JobsPipelineRepository;
 import com.itcinfotech.zicos.pipeline.repository.PipeLineTxnRepository;
 import com.itcinfotech.zicos.pipeline.repository.PipelineDefRepository;
-import com.itcinfotech.zicos.pipeline.repository.ViewProjectsRepository;
 import com.itcinfotech.zicos.pipeline.service.PipeLineService;
 import com.itcinfotech.zicos.pipeline.service.PipeLineTxnService;
 import com.itcinfotech.zicos.pipeline.service.PipelineDefService;
-import com.itcinfotech.zicos.pipeline.service.ViewProjectsService;
+import com.itcinfotech.zicos.sql.model.Projects;
+import com.itcinfotech.zicos.sql.repository.ProjectsRepository;
 import com.itcinfotech.zicos.utils.ConstantPropertiesUtils;
 import com.itcinfotech.zicos.utils.JenkinUtils;
 import com.itcinfotech.zicos.utils.PipeStateUpdater;
@@ -46,7 +45,7 @@ public class PipeLineServiceImpl implements PipeLineService {
 	private PipelineDefRepository pipelineDefRepository;
 	
 	@Autowired
-	private ViewProjectsService viewProjectsService;
+	private ProjectService projectService;
 	@Autowired
 	private PipeLineTxnService pipeLineTxnService;
 	@Autowired
@@ -54,7 +53,7 @@ public class PipeLineServiceImpl implements PipeLineService {
 	@Autowired
 	private PipeStateUpdater pipeStateUpdater;
 	@Autowired
-	private ViewProjectsRepository viewProjectsRepository;
+	private ProjectsRepository projectsRepository;
 	
 	@Autowired
 	JenkinUtils jenkinUtils;
@@ -69,8 +68,8 @@ public class PipeLineServiceImpl implements PipeLineService {
 	@Override
 	public JobsPipeline findPipeLineByProjectId(Long projectId) {
 
-		ViewProjects viewProject = new ViewProjects();
-		viewProject.setViewProjId(projectId);
+		Projects viewProject = new Projects();
+		viewProject.setProjectId(projectId);
 		return jobsPipelineRepository.findByProject(viewProject).get(0);
 	}
 
@@ -87,8 +86,8 @@ public class PipeLineServiceImpl implements PipeLineService {
 
 	@Override
 	public List<JobsPipeline> getAllJobsPipeLineByProjectIdAndpieDefId(Long projectId, Long pipeDefId, Long envId) {
-		ViewProjects project = new ViewProjects();
-		project.setViewProjId(projectId);
+		Projects project = new Projects();
+		project.setProjectId(projectId);
 		PipelineDef pipeLineDef = new PipelineDef();
 		pipeLineDef.setPipelineDefId(pipeDefId);
 		Environment environment = new Environment();
@@ -128,8 +127,8 @@ public class PipeLineServiceImpl implements PipeLineService {
 			return;
 		}
 				
-		ViewProjects viewProject = viewProjectsService.findProjectById(projectId);
-		if(viewProject == null){
+		Projects project = projectService.findProjectById(projectId);
+		if(project == null){
 			logger.info("No Project is exited with given Id");
 			return;
 		}
@@ -173,7 +172,7 @@ public class PipeLineServiceImpl implements PipeLineService {
 			
 			List<PipeLineTxn> savedPipeLineTxn = pipeLineTxnService.savePipeLineTransactins(pipelineTnxList);
 			
-			Map<String, Map<String, Map<String,String>>> initialStateMap = jenkinUtils.getPipeStatusDtls(constantPropertiesUtils.jenkinUrl,constantPropertiesUtils.proxyIpAddress,constantPropertiesUtils.proxyPort,viewProject.getProjName());
+			Map<String, Map<String, Map<String,String>>> initialStateMap = jenkinUtils.getPipeStatusDtls(constantPropertiesUtils.jenkinUrl,constantPropertiesUtils.proxyIpAddress,constantPropertiesUtils.proxyPort,project.getProjectName());
 			
 			//Executing pipe thruough first job
 			try {
@@ -183,7 +182,7 @@ public class PipeLineServiceImpl implements PipeLineService {
 				e.printStackTrace();
 			}
 			//
-			pipeStateUpdater.monitorPipe(initialStateMap,viewProject.getProjName(),jobsPipeline,pipelineDef);
+			pipeStateUpdater.monitorPipe(initialStateMap,project.getProjectName(),jobsPipeline,pipelineDef);
 		   return;
 	
 		
@@ -209,7 +208,7 @@ public class PipeLineServiceImpl implements PipeLineService {
 	@Override
 	public List<JobsPipeline> findJobsByProjId(Long projectId) {
 		// TODO Auto-generated method stub
-		ViewProjects ViewProjects = viewProjectsRepository.getOne(projectId);
-		return jobsPipelineRepository.findByProject(ViewProjects);
+		Projects projects = projectsRepository.findByProjectId(projectId);
+		return jobsPipelineRepository.findByProject(projects);
 	}	
 }
