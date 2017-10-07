@@ -4,26 +4,31 @@ spring:
 
    datasource:
       continueOnError: true
-      url: jdbc:oracle:thin:@localhost:1521:xe
-      username: pbb
-      password: pbb
-#      testWhileIdle: true
-     # validationQuery: SELECT 1
+      url: jdbc:mysql://localhost:3306/pbb
+      username: root
+      password: 
+      testWhileIdle: true
+      validationQuery: SELECT 1
 
    jpa:
      show-sql: true
      hibernate:
-       ddl-auto: none
+       ddl-auto: update
        naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
      properties:  
        hibernate:
          id.new_generator_mappings: true 
-         dialect: org.hibernate.dialect.Oracle10gDialect  
+         dialect: org.hibernate.dialect.MySQL5Dialect  
          
 ---
 spring:
   jackson:
-    serialization.FAIL_ON_EMPTY_BEANS: false    
+    serialization.FAIL_ON_EMPTY_BEANS: false
+      
+server:
+  session:
+    timeout: 1800
+    port: 8080    
 ---
 server:
   context-path: /PBB
@@ -37,10 +42,6 @@ mail.smtp.port : 25
 mail.smtp.from : pavan.kuppam@itcinfotech.com
 
 ---
-pbb.forgot.pwd: /forgotPassword  
+pbb.forgot.pwd: /auth/forgotPassword  
 
----
-server:
-  port: 8080
-  session:
-    timeout: 1800
+
